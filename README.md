@@ -1,2 +1,11 @@
-# Lumashy
-**LumaShy** adalah dashboard DeFi real-time berbasis **Somnia Data Streams (SDS)** yang menampilkan pergerakan harga token, volume transaksi, dan aktivitas pasar secara langsung tanpa perlu refresh.   Dengan memanfaatkan **SDS SDK**, LumaShy menghadirkan pengalaman pasar yang *hidup* dan selalu sinkron di blockchain Somnia Testnet.
+
+  # LumaShy DeFi Dashboard
+
+  This is a code bundle for LumaShy DeFi Dashboard. The original project is available at https://www.figma.com/design/138jhYkvqnKWsXVZMOiS4C/LumaShy-DeFi-Dashboard.
+
+  ## Running the code
+
+  Run `npm i` to install the dependencies.
+
+  Run `npm run dev` to start the development server.
+  
