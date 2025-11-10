@@ -1,0 +1,6 @@
+await contract.deploymentTransaction();
+const contract = await ethers.getContractAt("LumashyReward", "0xAd9C2562675753F197a5307D27d8aa42020956Fe");
+await contract.deploymentTransaction();
+const contract = await ethers.getContractAt("LumashyReward", "0xAd9C2562675753F197a5307D27d8aa42020956Fe");
+await contract.deploymentTransaction();
+const contract = await ethers.getContractAt("LumashyReward", "0xAd9C2562675753F197a5307D27d8aa42020956Fe");
