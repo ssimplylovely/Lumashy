@@ -191,7 +191,7 @@ export function SearchToken({ className = '' }: SearchTokenProps) {
 
   return (
     <>
-      <div ref={searchRef} className={`relative ${className}`}>
+      <div ref={searchRef} className={`relative z-[9999] ${className}`}>
         {/* Search Input */}
         <div className="relative">
           <Search
