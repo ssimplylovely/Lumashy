@@ -22,7 +22,7 @@ export function LiveTokenFeed({ onTokenClick }: LiveTokenFeedProps) {
     return `$${num.toFixed(decimals)}`;
   };
 
-  if (isLoading || data.size === 0) {
+  if (isLoading || data?.size === 0) {
     return (
       <div className="space-y-3">
         {[1, 2, 3, 4, 5].map((i) => (
