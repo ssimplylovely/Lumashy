@@ -5,6 +5,7 @@ import { Input } from './ui/input';
 import { Button } from './ui/button';
 import { TokenDetailModal } from './TokenDetailModal';
 import type { Token } from '../types/sds';
+import { createPortal } from 'react-dom';
 
 // Popular tokens on Somnia
 const POPULAR_TOKENS: Token[] = [
@@ -231,19 +232,20 @@ export function SearchToken({ className = '' }: SearchTokenProps) {
 
         {/* Search Results Dropdown */}
         <AnimatePresence>
-          {isSearchOpen && (
-      <motion.div
-      initial={{ opacity: 0, y: -10, scale: 0.95 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: -10, scale: 0.95 }}
-      transition={{ duration: 0.2 }}
-      className="fixed top-[80px] left-1/2 -translate-x-1/2 w-[600px] max-w-[95%] z-[99999] rounded-xl border overflow-hidden backdrop-blur-2xl"
-      style={{
-        backgroundColor: 'rgba(20,20,40,0.95)',
-        borderColor: 'rgba(255,255,255,0.1)',
-        boxShadow: `0 0 25px rgba(0,0,0,0.8), 0 0 10px var(--color-glow)`,
-      }}
-    >
+        {isSearchOpen &&
+         createPortal(
+         <motion.div
+        initial={{ opacity: 0, y: -10, scale: 0.95 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: -10, scale: 0.95 }}
+        transition={{ duration: 0.2 }}
+        className="fixed top-[80px] left-1/2 -translate-x-1/2 w-[600px] max-w-[95%] z-[99999] rounded-xl border overflow-hidden backdrop-blur-2xl"
+        style={{
+          backgroundColor: 'rgba(20,20,40,0.95)',
+          borderColor: 'rgba(255,255,255,0.1)',
+          boxShadow: `0 0 25px rgba(0,0,0,0.8), 0 0 10px var(--color-glow)`,
+        }}
+      >
     
     
               {/* Header */}
