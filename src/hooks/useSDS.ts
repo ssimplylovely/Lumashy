@@ -13,13 +13,10 @@ export function useTokenStream(symbol: string) {
     const initStream = async () => {
       try {
         setIsLoading(true);
-        
-        // Ensure SDS is connected
         if (!sdsService.getConnectionStatus()) {
           await sdsService.connect();
         }
 
-        // Subscribe to the token stream
         unsubscribe = sdsService.subscribeToStream(symbol, (tokenData) => {
           setData(tokenData);
           setIsLoading(false);
@@ -41,69 +38,76 @@ export function useTokenStream(symbol: string) {
   return { data, isLoading, error };
 }
 
-// Hook for subscribing to multiple token streams
-export function useMultipleTokenStreams(symbols: string[]) {
-  const [data, setData] = useState<Map<string, TokenData>>(new Map());
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-
-  useEffect(() => {
-    const unsubscribers: (() => void)[] = [];
-
-    const initStreams = async () => {
-      try {
-        setIsLoading(true);
-        
-        if (!sdsService.getConnectionStatus()) {
-          await sdsService.connect();
-        }
-
-        symbols.forEach((symbol) => {
-          const unsubscribe = sdsService.subscribeToStream(symbol, (tokenData) => {
-            setData((prevData) => {
-              const newData = new Map(prevData);
-              newData.set(symbol, tokenData);
-              return newData;
-            });
-            setIsLoading(false);
-            setError(null);
-          });
-          unsubscribers.push(unsubscribe);
-        });
-      } catch (err) {
-        setError(err as Error);
-        setIsLoading(false);
-      }
-    };
-
-    initStreams();
-
-    return () => {
-      unsubscribers.forEach((unsub) => unsub());
-    };
-  }, [symbols.join(',')]);
-
-  return { data, isLoading, error };
-}
-
-// Hook for SDS connection status
+// Hook untuk SDS connection yang sinkron ke MetaMask
 export function useSDSConnection() {
-  const [isConnected, setIsConnected] = useState(false);
+  const [isConnected, setIsConnected] = useState(sdsService.getConnectionStatus());
 
   const connect = useCallback(async () => {
-    if (!sdsService.getConnectionStatus()) {
+    try {
       await sdsService.connect();
       setIsConnected(true);
+    } catch (err) {
+      console.error('Failed to connect SDS:', err);
+      setIsConnected(false);
     }
   }, []);
 
   const disconnect = useCallback(() => {
-    sdsService.disconnect();
-    setIsConnected(false);
+    try {
+      sdsService.disconnect();
+      setIsConnected(false);
+    } catch (err) {
+      console.error('Failed to disconnect SDS:', err);
+    }
   }, []);
 
   useEffect(() => {
-    setIsConnected(sdsService.getConnectionStatus());
+    const ethereum = (window as any).ethereum;
+    if (!ethereum) return;
+
+    // Event: saat wallet MetaMask connect/disconnect
+    const handleAccountsChanged = (accounts: string[]) => {
+      console.log('🦊 MetaMask accountsChanged:', accounts);
+      if (accounts.length > 0) {
+        setIsConnected(true);
+        sdsService.connect(); // sambungkan SDS otomatis
+      } else {
+        setIsConnected(false);
+        sdsService.disconnect();
+      }
+    };
+
+    const handleConnect = () => {
+      console.log('🦊 MetaMask connected');
+      setIsConnected(true);
+      sdsService.connect();
+    };
+
+    const handleDisconnect = () => {
+      console.log('🦊 MetaMask disconnected');
+      setIsConnected(false);
+      sdsService.disconnect();
+    };
+
+    // Pasang listener MetaMask
+    ethereum.on('accountsChanged', handleAccountsChanged);
+    ethereum.on('connect', handleConnect);
+    ethereum.on('disconnect', handleDisconnect);
+
+    // Cek awal (kalau MetaMask udah connect duluan)
+    ethereum.request({ method: 'eth_accounts' }).then((accounts: string[]) => {
+      if (accounts.length > 0) {
+        setIsConnected(true);
+        sdsService.connect();
+      }
+    });
+
+    // Cleanup
+    return () => {
+      ethereum.removeListener('accountsChanged', handleAccountsChanged);
+      ethereum.removeListener('connect', handleConnect);
+      ethereum.removeListener('disconnect', handleDisconnect);
+    };
   }, []);
 
   return { isConnected, connect, disconnect };
