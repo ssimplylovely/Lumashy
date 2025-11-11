@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts';
-import { useMultipleTokenStreams as useTokenStream } from '../hooks/useSDS';
+import { useTokenStream } from '../hooks/useSDS';
 import { useTheme } from '../hooks/useTheme';
 import { Skeleton } from './ui/skeleton';
 import { TrendingUp } from 'lucide-react';

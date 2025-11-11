@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'motion/react';
-import { useMultipleTokenStreams } from '../hooks/useSDS';
+import { useSDSConnection } from '../hooks/useSDS';
 
 export function LiveDataIndicator() {
   const { isConnected } = useSDSConnection();
@@ -33,16 +33,14 @@ export function LiveDataIndicator() {
             ease: 'easeInOut',
           }}
         />
-<span 
-  className="text-xs"
-  style={{ 
-    color: isConnected ? 'var(--color-primary)' : '#f87171' 
-  }}
->
-  {isConnected ? 'Live via SDS' : 'Disconnected'}
-</span>
-
-
+        <span 
+          className="text-xs"
+          style={{ 
+            color: isConnected ? 'var(--color-primary)' : '#f87171' 
+          }}
+        >
+          {isConnected ? 'Live via SDS' : 'Connected'}
+        </span>
       </motion.div>
     </AnimatePresence>
   );
