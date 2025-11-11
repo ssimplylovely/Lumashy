@@ -33,14 +33,16 @@ export function LiveDataIndicator() {
             ease: 'easeInOut',
           }}
         />
-        <span 
-          className="text-xs"
-          style={{ 
-            color: isConnected ? 'var(--color-primary)' : '#f87171' 
-          }}
-        >
-          {isConnected ? 'Live via SDS' : 'Disconnected'}
-        </span>
+<span 
+  className="text-xs"
+  style={{ 
+    color: isConnected ? 'var(--color-primary)' : '#f87171' 
+  }}
+>
+  {isConnected ? 'Live via SDS' : 'Disconnected'}
+</span>
+
+
       </motion.div>
     </AnimatePresence>
   );

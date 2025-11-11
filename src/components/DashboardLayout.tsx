@@ -95,7 +95,7 @@ export function DashboardLayout({ onBackToLanding }: DashboardLayoutProps) {
                   animate={{ opacity: 1, x: 0 }}
                   className="flex items-center gap-4"
                 >
-                  <SearchToken className="hidden md:block w-80" />
+                  
                   <MobileSearchButton />
                   <LiveDataIndicator />
                   <WalletConnect />
@@ -287,7 +287,7 @@ function TokensView({ onTokenClick }: { onTokenClick: (token: TokenData) => void
         }}
       >
         <h3 className="text-white mb-4">Search Tokens</h3>
-        <SearchToken />
+        
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -403,11 +403,11 @@ function SettingsView() {
           </div>
           <div className="flex justify-between">
             <span className="text-gray-400">Chain ID:</span>
-            <span className="text-white">50311</span>
+            <span className="text-white">50312</span>
           </div>
           <div className="flex justify-between">
             <span className="text-gray-400">RPC Endpoint:</span>
-            <span className="text-white text-xs">testnet-rpc.somnia.network</span>
+            <span className="text-white text-xs">dream-rpc.somnia.network</span>
           </div>
         </div>
       </div>

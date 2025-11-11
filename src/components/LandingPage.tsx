@@ -204,7 +204,7 @@ export function LandingPage({ onLaunchApp }: LandingPageProps) {
               </h1>
               
               <p className="text-xl md:text-2xl text-gray-300 mb-4">
-                Real-Time Web3 DeFi Dashboard
+                Real-Time DeFi Dashboard
               </p>
               
               <p className="text-gray-400 mb-12 max-w-2xl mx-auto">
