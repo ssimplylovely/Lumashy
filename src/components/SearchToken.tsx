@@ -232,18 +232,20 @@ export function SearchToken({ className = '' }: SearchTokenProps) {
         {/* Search Results Dropdown */}
         <AnimatePresence>
           {isSearchOpen && (
-            <motion.div
-              initial={{ opacity: 0, y: -10, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -10, scale: 0.95 }}
-              transition={{ duration: 0.2 }}
-              className="absolute top-full mt-2 left-0 right-0 z-50 rounded-xl border overflow-hidden"
-              style={{
-                backgroundColor: 'var(--color-bg)',
-                borderColor: 'var(--color-border)',
-                boxShadow: `0 10px 40px rgba(0, 0, 0, 0.5), 0 0 20px var(--color-glow)`,
-              }}
-            >
+      <motion.div
+      initial={{ opacity: 0, y: -10, scale: 0.95 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: -10, scale: 0.95 }}
+      transition={{ duration: 0.2 }}
+      className="fixed top-[80px] left-1/2 -translate-x-1/2 w-[600px] max-w-[95%] z-[99999] rounded-xl border overflow-hidden backdrop-blur-2xl"
+      style={{
+        backgroundColor: 'rgba(20,20,40,0.95)',
+        borderColor: 'rgba(255,255,255,0.1)',
+        boxShadow: `0 0 25px rgba(0,0,0,0.8), 0 0 10px var(--color-glow)`,
+      }}
+    >
+    
+    
               {/* Header */}
               <div
                 className="flex items-center justify-between px-4 py-2 border-b bg-white/5"
