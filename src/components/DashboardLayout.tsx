@@ -3,7 +3,6 @@ import { motion } from 'motion/react';
 import { Sparkles, Github, FileText } from 'lucide-react';
 import { Sidebar, SidebarView } from './Sidebar';
 import { WalletConnect } from './WalletConnect';
-import { SearchToken } from './SearchToken';
 import { MobileSearchButton } from './MobileSearchButton';
 import { KeyboardShortcuts } from './KeyboardShortcuts';
 import { LiveTokenFeed } from './LiveTokenFeed';

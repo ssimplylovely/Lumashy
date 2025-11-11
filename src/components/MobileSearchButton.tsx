@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Search, X } from 'lucide-react';
 import { Button } from './ui/button';
-import { SearchToken } from './SearchToken';
+
 
 export function MobileSearchButton() {
   const [isOpen, setIsOpen] = useState(false);
@@ -59,7 +59,7 @@ export function MobileSearchButton() {
               </div>
 
               {/* Search Component */}
-              <SearchToken />
+             
             </motion.div>
           </>
         )}
