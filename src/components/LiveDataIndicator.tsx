@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'motion/react';
-import { useSDSConnection } from '../hooks/useSDS';
+import { useMultipleTokenStreams } from '../hooks/useSDS';
 
 export function LiveDataIndicator() {
   const { isConnected } = useSDSConnection();
