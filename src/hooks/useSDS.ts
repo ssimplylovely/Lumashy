@@ -1,7 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import { sdsService, TokenData } from '../services/sdsService';
 
-// Hook for subscribing to SDS token streams
+/* ============================================================
+   ✅ Hook 1 — Stream satu token
+   ============================================================ */
 export function useTokenStream(symbol: string) {
   const [data, setData] = useState<TokenData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -13,6 +15,7 @@ export function useTokenStream(symbol: string) {
     const initStream = async () => {
       try {
         setIsLoading(true);
+
         if (!sdsService.getConnectionStatus()) {
           await sdsService.connect();
         }
@@ -29,16 +32,55 @@ export function useTokenStream(symbol: string) {
     };
 
     initStream();
-
-    return () => {
-      unsubscribe?.();
-    };
+    return () => unsubscribe?.();
   }, [symbol]);
 
   return { data, isLoading, error };
 }
 
-// Hook untuk SDS connection yang sinkron ke MetaMask
+/* ============================================================
+   ✅ Hook 2 — Stream beberapa token sekaligus
+   ============================================================ */
+export function useMultipleTokenStreams(symbols: string[]) {
+  const [tokenDataList, setTokenDataList] = useState<TokenData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    let unsubscribers: (() => void)[] = [];
+
+    const initStreams = async () => {
+      try {
+        setIsLoading(true);
+
+        if (!sdsService.getConnectionStatus()) {
+          await sdsService.connect();
+        }
+
+        unsubscribers = symbols.map((symbol) =>
+          sdsService.subscribeToStream(symbol, (data) => {
+            setTokenDataList((prev) => {
+              const existing = prev.filter((t) => t.symbol !== symbol);
+              return [...existing, data];
+            });
+            setIsLoading(false);
+          })
+        );
+      } catch (err) {
+        console.error('❌ Gagal subscribe SDS streams:', err);
+        setIsLoading(false);
+      }
+    };
+
+    initStreams();
+    return () => unsubscribers.forEach((unsub) => unsub());
+  }, [symbols]);
+
+  return { tokenDataList, isLoading };
+}
+
+/* ============================================================
+   ✅ Hook 3 — Sinkronisasi koneksi SDS dengan MetaMask
+   ============================================================ */
 export function useSDSConnection() {
   const [isConnected, setIsConnected] = useState(sdsService.getConnectionStatus());
 
@@ -47,7 +89,7 @@ export function useSDSConnection() {
       await sdsService.connect();
       setIsConnected(true);
     } catch (err) {
-      console.error('Failed to connect SDS:', err);
+      console.error('❌ Failed to connect SDS:', err);
       setIsConnected(false);
     }
   }, []);
@@ -57,7 +99,7 @@ export function useSDSConnection() {
       sdsService.disconnect();
       setIsConnected(false);
     } catch (err) {
-      console.error('Failed to disconnect SDS:', err);
+      console.error('❌ Failed to disconnect SDS:', err);
     }
   }, []);
 
@@ -65,50 +107,46 @@ export function useSDSConnection() {
     const ethereum = (window as any).ethereum;
     if (!ethereum) return;
 
-    // Event: saat wallet MetaMask connect/disconnect
+    // Event dari MetaMask
     const handleAccountsChanged = (accounts: string[]) => {
-      console.log('🦊 MetaMask accountsChanged:', accounts);
       if (accounts.length > 0) {
-        setIsConnected(true);
-        sdsService.connect(); // sambungkan SDS otomatis
+        console.log('🦊 Wallet aktif → SDS connect');
+        connect();
       } else {
-        setIsConnected(false);
-        sdsService.disconnect();
+        console.log('🦊 Wallet dilepas → SDS disconnect');
+        disconnect();
       }
     };
 
     const handleConnect = () => {
       console.log('🦊 MetaMask connected');
-      setIsConnected(true);
-      sdsService.connect();
+      connect();
     };
 
     const handleDisconnect = () => {
       console.log('🦊 MetaMask disconnected');
-      setIsConnected(false);
-      sdsService.disconnect();
+      disconnect();
     };
 
-    // Pasang listener MetaMask
+    // Pasang listener
     ethereum.on('accountsChanged', handleAccountsChanged);
     ethereum.on('connect', handleConnect);
     ethereum.on('disconnect', handleDisconnect);
 
-    // Cek awal (kalau MetaMask udah connect duluan)
+    // Cek awal (kalau MetaMask udah login duluan)
     ethereum.request({ method: 'eth_accounts' }).then((accounts: string[]) => {
       if (accounts.length > 0) {
-        setIsConnected(true);
-        sdsService.connect();
+        connect();
       }
     });
 
-    // Cleanup
+    // Bersihkan listener
     return () => {
       ethereum.removeListener('accountsChanged', handleAccountsChanged);
       ethereum.removeListener('connect', handleConnect);
       ethereum.removeListener('disconnect', handleDisconnect);
     };
-  }, []);
+  }, [connect, disconnect]);
 
   return { isConnected, connect, disconnect };
 }
