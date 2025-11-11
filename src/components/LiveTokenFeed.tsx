@@ -9,7 +9,7 @@ interface LiveTokenFeedProps {
 }
 
 export function LiveTokenFeed({ onTokenClick }: LiveTokenFeedProps) {
-  const { data, isLoading } = useMultipleTokenStreams(['STT', 'USDC', 'WETH', 'DAI', 'USDT']);
+  const { tokenDataList, isLoading } = useMultipleTokenStreams(['BTC', 'ETH']);
 
   const formatNumber = (num: number, decimals: number = 2) => {
     if (num >= 1e9) {
